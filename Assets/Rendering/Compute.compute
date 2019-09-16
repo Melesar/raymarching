@@ -1,0 +1,108 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+Texture2D<float4> Source;
+RWTexture2D<float4> Destination;
+
+float4x4 _CameraToWorld;
+float4x4 _CameraInverseProjection;
+
+struct ShapeData {
+    int shapeType;
+    int operation;
+    float3 position;
+    float4 size;
+};
+
+StructuredBuffer<ShapeData> shapes;
+int numShapes;
+
+const int MAX_MARCH_STEPS = 100;
+
+struct Ray 
+{
+    float3 origin;
+    float3 direction;
+};
+
+float InvLerp (float v, float min, float max)
+{
+    return (v - min) / (max - min);
+}
+
+float SphereDistance(float3 p, float3 position, float radius)
+{
+    return distance(p, position) - radius;
+}
+
+float PrizmDistance(float3 p, float3 position, float3 size)
+{
+    float3 d = abs(p - position) - size;
+    return length(max(d, 0)) + min(max(d.x, max(d.y, d.z)), 0);
+}
+
+Ray CreateRay (float3 origin, float3 direction)
+{
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+Ray CreateCameraRay (float2 screenCoords)
+{
+    float3 origin = mul(_CameraToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(_CameraInverseProjection, float4(screenCoords, 0, 1)).xyz;
+    direction = mul(_CameraToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    
+    return CreateRay(origin, direction);
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint width,height;
+    Destination.GetDimensions(width, height);
+     
+    Destination[id.xy] = float4(1, 0, 0, 1);
+    return;
+    Destination[id.xy] = Source[id.xy];
+    
+    float2 uv = id.xy / float2(width,height) * 2 - 1;
+    Ray cameraRay = CreateCameraRay(uv);
+    
+    float3 eye = cameraRay.origin;
+    for(int step = 0; step < 100; step++)
+    {
+        float minDistance = 100000;
+        for(int shapeIdx = 0; shapeIdx < numShapes; shapeIdx++) 
+        {
+            ShapeData shape = shapes[shapeIdx];
+            float shapeDistance = 0;
+            if (shape.shapeType == 0)
+            {
+                shapeDistance = SphereDistance(eye, shape.position, shape.size.x);
+            }
+            if (shape.shapeType == 1)
+            {
+                shapeDistance = PrizmDistance(eye, shape.position, shape.size.xyz);
+            }   
+            
+            if (shapeDistance < minDistance) 
+            {
+                minDistance = shapeDistance;
+            }
+        }
+        
+        if (minDistance < 0.001) 
+        {
+            Destination[id.xy] = float4(1, 0, 0, 1);
+            break;
+        }
+        else
+        {
+            eye += cameraRay.direction * minDistance;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5fb9ece9c3ffc4fa5d644eefebcb45, type: 3}
+  m_Name: RaymarchingPipeline
+  m_EditorClassIdentifier: 
+  m_shader: {fileID: 7200000, guid: 2b56e6fd4dcccea4eb2aad5021447f2d, type: 3}
+  m_shapes: {fileID: 11400000, guid: d0c2ab8fbf6e2224ba54a302ac0ea05a, type: 2}
