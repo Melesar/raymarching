@@ -7,5 +7,6 @@ namespace Melesar.Raymarching.SRP
 	{
 		public ComputeShader shader;
 		public ShapesCollection shapes;
+		public Shader screenQuadShader;
 	}
 }

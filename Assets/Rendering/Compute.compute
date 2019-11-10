@@ -62,16 +62,14 @@ Ray CreateCameraRay (float2 screenCoords)
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    uint width,height;
+    //Destination[id.xy] = Source[id.xy];
+    
+    uint width, height;
     Destination.GetDimensions(width, height);
-     
-    Destination[id.xy] = float4(1, 0, 0, 1);
-    return;
-    Destination[id.xy] = Source[id.xy];
     
     float2 uv = id.xy / float2(width,height) * 2 - 1;
     Ray cameraRay = CreateCameraRay(uv);
-    
+
     float3 eye = cameraRay.origin;
     for(int step = 0; step < 100; step++)
     {
@@ -95,7 +93,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             }
         }
         
-        if (minDistance < 0.001) 
+        if (minDistance < 0.01) 
         {
             Destination[id.xy] = float4(1, 0, 0, 1);
             break;

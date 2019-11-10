@@ -16,7 +16,7 @@ namespace Melesar.Raymarching.Shapes
 		private void OnDrawGizmos()
 		{
 			Gizmos.color = Color.green;
-			Gizmos.DrawWireCube(transform.position, Size);
+			Gizmos.DrawWireCube(transform.position, 2 * Size);
 		}
 	}
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Melesar.Raymarching.Shapes
 {
+	[ExecuteInEditMode]
 	public abstract class Shape : MonoBehaviour
 	{
 		[SerializeField] private ShapesCollection m_shapes;

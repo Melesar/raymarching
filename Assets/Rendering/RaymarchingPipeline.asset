@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_shader: {fileID: 7200000, guid: 2b56e6fd4dcccea4eb2aad5021447f2d, type: 3}
   m_shapes: {fileID: 11400000, guid: d0c2ab8fbf6e2224ba54a302ac0ea05a, type: 2}
+  _screenQuadShader: {fileID: 4800000, guid: 29e579895a1684740984a2f63710106d, type: 3}
